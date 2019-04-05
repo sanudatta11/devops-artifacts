@@ -1,0 +1,15 @@
+conn azure
+  authby=secret
+  type=tunnel
+  leftsendcert=never
+  left=172.31.70.54
+  leftsubnet=172.31.64.0/20
+  right=10.1.4.0
+  rightsubnet=192.168.0.0/16
+  keyexchange=ikev2
+  ikelifetime=10800s
+  keylife=57m
+  keyingtries=1
+  rekeymargin=3m
+  compress=no
+  auto=start

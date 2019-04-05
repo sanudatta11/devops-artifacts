@@ -1,0 +1,31 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "s3:GetObject",
+                "s3:ListBucket",
+                "s3:GetBucketLocation"
+            ],
+            "Resource": [
+                "arn:aws:s3:::vmwareimport001",
+                "arn:aws:s3:::vmwareimport001/*"
+            ]
+        },
+        {
+            "Effect": "Allow",
+            "Action": "ec2:ModifySnapshotAttribute",
+            "Resource": "arn:aws:ec2:*::snapshot/*"
+        },
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ec2:CopySnapshot",
+                "ec2:Describe*",
+                "ec2:RegisterImage"
+            ],
+            "Resource": "*"
+        }
+    ]
+}

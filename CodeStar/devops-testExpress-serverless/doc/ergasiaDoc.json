@@ -1,0 +1,976 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0",
+      "title": "CodeStar Serverless",
+      "description": "TODO: Add Description"
+    },
+    "host": "localhost:8000",
+    "basePath": "/api",
+    "schemes": [
+      "http"
+    ],
+    "consumes": [
+      "application/json"
+    ],
+    "produces": [
+      "application/json"
+    ],
+    "paths": {
+      "/createCompany": {
+        "post": {
+          "description": "TODO: Add Description",
+          "summary": "Create Company",
+          "tags": [
+            "Misc"
+          ],
+          "operationId": "CreateCompanyPost",
+          "produces": [
+            "application/json"
+          ],
+          "consumes": [
+            "application/x-www-form-urlencoded"
+          ],
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "required": true,
+              "type": "string",
+              "description": ""
+            },
+            {
+              "name": "name",
+              "in": "formData",
+              "required": true,
+              "type": "string",
+              "description": ""
+            },
+            {
+              "name": "about",
+              "in": "formData",
+              "required": true,
+              "type": "string",
+              "description": ""
+            },
+            {
+              "name": "yearFounded",
+              "in": "formData",
+              "required": true,
+              "type": "string",
+              "description": ""
+            },
+            {
+              "name": "funding",
+              "in": "formData",
+              "required": true,
+              "type": "string",
+              "description": ""
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "",
+              "schema": {
+                "$ref": "#/definitions/CreateCompanySuccess"
+              },
+              "examples": {
+                "application/json": {
+                  "_id": "5ba0296236d1df5c2416497a",
+                  "name": "Company Test 001",
+                  "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus. Nullam non nisi est sit amet facilisis. Sed risus pretium quam vulputate. Interdum velit euismod in pellentesque massa placerat duis ultricies. Ac turpis egestas sed tempus urna et pharetra. Volutpat lacus laoreet non curabitur gravida arcu. Commodo viverra maecenas accumsan lacus vel facilisis. Venenatis tellus in metus vulputate. Eu consequat ac felis donec et odio. Aliquet nec ullamcorper sit amet risus nullam eget. Diam phasellus vestibulum lorem sed risus ultricies tristique. Cursus in hac habitasse platea dictumst quisque sagittis purus sit. Pellentesque habitant morbi tristique senectus et. Dignissim convallis aenean et tortor.",
+                  "yearFounded": 1998,
+                  "funding": "10$ M",
+                  "createdAt": "2018-09-17T22:23:30.951Z",
+                  "updatedAt": "2018-09-17T22:23:30.951Z",
+                  "__v": 0
+                }
+              }
+            }
+          }
+        }
+      },
+      "/getCompany": {
+        "get": {
+          "description": "TODO: Add Description",
+          "summary": "Get Companies",
+          "tags": [
+            "Misc"
+          ],
+          "operationId": "GetCompanyGet",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/GetCompany"
+                }
+              },
+              "examples": {
+                "application/json": [
+                  {
+                    "_id": "5ba0296236d1df5c2416497a",
+                    "name": "Company Test 001",
+                    "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus. Nullam non nisi est sit amet facilisis. Sed risus pretium quam vulputate. Interdum velit euismod in pellentesque massa placerat duis ultricies. Ac turpis egestas sed tempus urna et pharetra. Volutpat lacus laoreet non curabitur gravida arcu. Commodo viverra maecenas accumsan lacus vel facilisis. Venenatis tellus in metus vulputate. Eu consequat ac felis donec et odio. Aliquet nec ullamcorper sit amet risus nullam eget. Diam phasellus vestibulum lorem sed risus ultricies tristique. Cursus in hac habitasse platea dictumst quisque sagittis purus sit. Pellentesque habitant morbi tristique senectus et. Dignissim convallis aenean et tortor.",
+                    "yearFounded": 1998,
+                    "funding": "10$ M",
+                    "createdAt": "2018-09-17T22:23:30.951Z",
+                    "updatedAt": "2018-09-17T22:23:30.951Z",
+                    "__v": 0
+                  },
+                  {
+                    "_id": "5ba0298536d1df5c2416497b",
+                    "name": "Company Test 002",
+                    "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus. Nullam non nisi est sit amet facilisis. Sed risus pretium quam vulputate. Interdum velit euismod in pellentesque massa placerat duis ultricies. Ac turpis egestas sed tempus urna et pharetra. Volutpat lacus laoreet non curabitur gravida arcu. Commodo viverra maecenas accumsan lacus vel facilisis. Venenatis tellus in metus vulputate. Eu consequat ac felis donec et odio. Aliquet nec ullamcorper sit amet risus nullam eget. Diam phasellus vestibulum lorem sed risus ultricies tristique. Cursus in hac habitasse platea dictumst quisque sagittis purus sit. Pellentesque habitant morbi tristique senectus et. Dignissim convallis aenean et tortor.",
+                    "yearFounded": 1998,
+                    "funding": "10$ M",
+                    "createdAt": "2018-09-17T22:24:05.22Z",
+                    "updatedAt": "2018-09-17T22:24:05.22Z",
+                    "__v": 0
+                  },
+                  {
+                    "_id": "5ba0299136d1df5c2416497c",
+                    "name": "Company Test 003",
+                    "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus. Nullam non nisi est sit amet facilisis. Sed risus pretium quam vulputate. Interdum velit euismod in pellentesque massa placerat duis ultricies. Ac turpis egestas sed tempus urna et pharetra. Volutpat lacus laoreet non curabitur gravida arcu. Commodo viverra maecenas accumsan lacus vel facilisis. Venenatis tellus in metus vulputate. Eu consequat ac felis donec et odio. Aliquet nec ullamcorper sit amet risus nullam eget. Diam phasellus vestibulum lorem sed risus ultricies tristique. Cursus in hac habitasse platea dictumst quisque sagittis purus sit. Pellentesque habitant morbi tristique senectus et. Dignissim convallis aenean et tortor.",
+                    "yearFounded": 2007,
+                    "funding": "5$ M",
+                    "createdAt": "2018-09-17T22:24:17.742Z",
+                    "updatedAt": "2018-09-17T22:24:17.742Z",
+                    "__v": 0
+                  },
+                  {
+                    "_id": "5ba0299b36d1df5c2416497d",
+                    "name": "Company Test 004",
+                    "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus. Nullam non nisi est sit amet facilisis. Sed risus pretium quam vulputate. Interdum velit euismod in pellentesque massa placerat duis ultricies. Ac turpis egestas sed tempus urna et pharetra. Volutpat lacus laoreet non curabitur gravida arcu. Commodo viverra maecenas accumsan lacus vel facilisis. Venenatis tellus in metus vulputate. Eu consequat ac felis donec et odio. Aliquet nec ullamcorper sit amet risus nullam eget. Diam phasellus vestibulum lorem sed risus ultricies tristique. Cursus in hac habitasse platea dictumst quisque sagittis purus sit. Pellentesque habitant morbi tristique senectus et. Dignissim convallis aenean et tortor.",
+                    "yearFounded": 2017,
+                    "funding": "1$ M",
+                    "createdAt": "2018-09-17T22:24:27.669Z",
+                    "updatedAt": "2018-09-17T22:24:27.669Z",
+                    "__v": 0
+                  },
+                  {
+                    "_id": "5ba029a536d1df5c2416497e",
+                    "name": "Company Test 005",
+                    "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus. Nullam non nisi est sit amet facilisis. Sed risus pretium quam vulputate. Interdum velit euismod in pellentesque massa placerat duis ultricies. Ac turpis egestas sed tempus urna et pharetra. Volutpat lacus laoreet non curabitur gravida arcu. Commodo viverra maecenas accumsan lacus vel facilisis. Venenatis tellus in metus vulputate. Eu consequat ac felis donec et odio. Aliquet nec ullamcorper sit amet risus nullam eget. Diam phasellus vestibulum lorem sed risus ultricies tristique. Cursus in hac habitasse platea dictumst quisque sagittis purus sit. Pellentesque habitant morbi tristique senectus et. Dignissim convallis aenean et tortor.",
+                    "yearFounded": 2017,
+                    "funding": "6$ M",
+                    "createdAt": "2018-09-17T22:24:37.21Z",
+                    "updatedAt": "2018-09-17T22:24:37.21Z",
+                    "__v": 0
+                  },
+                  {
+                    "_id": "5ba029b636d1df5c2416497f",
+                    "name": "NowFloats",
+                    "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus. Nullam non nisi est sit amet facilisis. Sed risus pretium quam vulputate. Interdum velit euismod in pellentesque massa placerat duis ultricies. Ac turpis egestas sed tempus urna et pharetra. Volutpat lacus laoreet non curabitur gravida arcu. Commodo viverra maecenas accumsan lacus vel facilisis. Venenatis tellus in metus vulputate. Eu consequat ac felis donec et odio. Aliquet nec ullamcorper sit amet risus nullam eget. Diam phasellus vestibulum lorem sed risus ultricies tristique. Cursus in hac habitasse platea dictumst quisque sagittis purus sit. Pellentesque habitant morbi tristique senectus et. Dignissim convallis aenean et tortor.",
+                    "yearFounded": 2010,
+                    "funding": "20$ M",
+                    "createdAt": "2018-09-17T22:24:54.898Z",
+                    "updatedAt": "2018-09-17T22:24:54.898Z",
+                    "__v": 0
+                  },
+                  {
+                    "_id": "5ba029c436d1df5c24164980",
+                    "name": "Intel",
+                    "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus. Nullam non nisi est sit amet facilisis. Sed risus pretium quam vulputate. Interdum velit euismod in pellentesque massa placerat duis ultricies. Ac turpis egestas sed tempus urna et pharetra. Volutpat lacus laoreet non curabitur gravida arcu. Commodo viverra maecenas accumsan lacus vel facilisis. Venenatis tellus in metus vulputate. Eu consequat ac felis donec et odio. Aliquet nec ullamcorper sit amet risus nullam eget. Diam phasellus vestibulum lorem sed risus ultricies tristique. Cursus in hac habitasse platea dictumst quisque sagittis purus sit. Pellentesque habitant morbi tristique senectus et. Dignissim convallis aenean et tortor.",
+                    "yearFounded": 1998,
+                    "funding": "76$ M",
+                    "createdAt": "2018-09-17T22:25:08.411Z",
+                    "updatedAt": "2018-09-17T22:25:08.411Z",
+                    "__v": 0
+                  },
+                  {
+                    "_id": "5ba029cf36d1df5c24164981",
+                    "name": "DELL",
+                    "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus. Nullam non nisi est sit amet facilisis. Sed risus pretium quam vulputate. Interdum velit euismod in pellentesque massa placerat duis ultricies. Ac turpis egestas sed tempus urna et pharetra. Volutpat lacus laoreet non curabitur gravida arcu. Commodo viverra maecenas accumsan lacus vel facilisis. Venenatis tellus in metus vulputate. Eu consequat ac felis donec et odio. Aliquet nec ullamcorper sit amet risus nullam eget. Diam phasellus vestibulum lorem sed risus ultricies tristique. Cursus in hac habitasse platea dictumst quisque sagittis purus sit. Pellentesque habitant morbi tristique senectus et. Dignissim convallis aenean et tortor.",
+                    "yearFounded": 1900,
+                    "funding": "26$ M",
+                    "createdAt": "2018-09-17T22:25:19.956Z",
+                    "updatedAt": "2018-09-17T22:25:19.956Z",
+                    "__v": 0
+                  },
+                  {
+                    "_id": "5ba029d736d1df5c24164982",
+                    "name": "Hitachi",
+                    "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus. Nullam non nisi est sit amet facilisis. Sed risus pretium quam vulputate. Interdum velit euismod in pellentesque massa placerat duis ultricies. Ac turpis egestas sed tempus urna et pharetra. Volutpat lacus laoreet non curabitur gravida arcu. Commodo viverra maecenas accumsan lacus vel facilisis. Venenatis tellus in metus vulputate. Eu consequat ac felis donec et odio. Aliquet nec ullamcorper sit amet risus nullam eget. Diam phasellus vestibulum lorem sed risus ultricies tristique. Cursus in hac habitasse platea dictumst quisque sagittis purus sit. Pellentesque habitant morbi tristique senectus et. Dignissim convallis aenean et tortor.",
+                    "yearFounded": 1910,
+                    "funding": "26$ M",
+                    "createdAt": "2018-09-17T22:25:27.701Z",
+                    "updatedAt": "2018-09-17T22:25:27.701Z",
+                    "__v": 0
+                  },
+                  {
+                    "_id": "5ba02a0436d1df5c24164983",
+                    "name": "SAP",
+                    "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus. Nullam non nisi est sit amet facilisis. Sed risus pretium quam vulputate. Interdum velit euismod in pellentesque massa placerat duis ultricies. Ac turpis egestas sed tempus urna et pharetra. Volutpat lacus laoreet non curabitur gravida arcu. Commodo viverra maecenas accumsan lacus vel facilisis. Venenatis tellus in metus vulputate. Eu consequat ac felis donec et odio. Aliquet nec ullamcorper sit amet risus nullam eget. Diam phasellus vestibulum lorem sed risus ultricies tristique. Cursus in hac habitasse platea dictumst quisque sagittis purus sit. Pellentesque habitant morbi tristique senectus et. Dignissim convallis aenean et tortor.",
+                    "yearFounded": 1972,
+                    "funding": "16$ M",
+                    "createdAt": "2018-09-17T22:26:12.307Z",
+                    "updatedAt": "2018-09-17T22:26:12.307Z",
+                    "__v": 0
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "/createJob": {
+        "post": {
+          "description": "TODO: Add Description",
+          "summary": "Create Job",
+          "tags": [
+            "Misc"
+          ],
+          "operationId": "CreateJobPost",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "required": true,
+              "type": "string",
+              "description": ""
+            },
+            {
+              "name": "Body",
+              "in": "body",
+              "required": true,
+              "description": "",
+              "schema": {
+                "$ref": "#/definitions/CreateJobrequest"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "",
+              "schema": {
+                "$ref": "#/definitions/CreateJob"
+              },
+              "examples": {
+                "application/json": {
+                  "questions": [
+                    "5ba02b27a02a045e5001dd44",
+                    "5ba02b76fa254d5ebb98e126"
+                  ],
+                  "status": 1,
+                  "_id": "5ba02baefa254d5ebb98e127",
+                  "name": "Software Developement Engineer",
+                  "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tellus id interdum velit laoreet id donec ultrices tincidunt. Ut eu sem integer vitae justo eget magna. Sed velit dignissim sodales ut.,",
+                  "companyId": "5ba02a0436d1df5c24164983",
+                  "createdAt": "2018-09-17T22:33:18.238Z",
+                  "updatedAt": "2018-09-17T22:33:18.238Z",
+                  "__v": 0
+                }
+              }
+            }
+          }
+        }
+      },
+      "/createQuestions": {
+        "post": {
+          "description": "TODO: Add Description",
+          "summary": "Create Questions",
+          "tags": [
+            "Misc"
+          ],
+          "operationId": "CreateQuestionsPost",
+          "produces": [
+            "application/json"
+          ],
+          "consumes": [
+            "application/x-www-form-urlencoded"
+          ],
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "required": true,
+              "type": "string",
+              "description": ""
+            },
+            {
+              "name": "question",
+              "in": "formData",
+              "required": true,
+              "type": "string",
+              "description": ""
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "",
+              "schema": {
+                "$ref": "#/definitions/CreateQuestions"
+              },
+              "examples": {
+                "application/json": {
+                  "_id": "5ba02b76fa254d5ebb98e126",
+                  "question": "What is your best skillset?",
+                  "createdAt": "2018-09-17T22:32:22.688Z",
+                  "updatedAt": "2018-09-17T22:32:22.688Z",
+                  "__v": 0
+                }
+              }
+            }
+          }
+        }
+      },
+      "/getQuestions": {
+        "get": {
+          "description": "TODO: Add Description",
+          "summary": "Get Questions",
+          "tags": [
+            "Misc"
+          ],
+          "operationId": "GetQuestionsGet",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/GetQuestion"
+                }
+              },
+              "examples": {
+                "application/json": [
+                  {
+                    "_id": "5ba02b27a02a045e5001dd44",
+                    "question": "Why do you wanna join our company?",
+                    "createdAt": "2018-09-17T22:31:03.064Z",
+                    "updatedAt": "2018-09-17T22:31:03.064Z",
+                    "__v": 0
+                  },
+                  {
+                    "_id": "5ba02b76fa254d5ebb98e126",
+                    "question": "What is your best skillset?",
+                    "createdAt": "2018-09-17T22:32:22.688Z",
+                    "updatedAt": "2018-09-17T22:32:22.688Z",
+                    "__v": 0
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "/getJobs": {
+        "get": {
+          "description": "TODO: Add Description",
+          "summary": "Get Jobs",
+          "tags": [
+            "Misc"
+          ],
+          "operationId": "GetJobsGet",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [],
+          "responses": {
+            "200": {
+              "description": "",
+              "schema": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/GetJob"
+                }
+              },
+              "examples": {
+                "application/json": [
+                  {
+                    "questions": [
+                      "5ba02b27a02a045e5001dd44",
+                      "5ba02b76fa254d5ebb98e126"
+                    ],
+                    "status": 1,
+                    "_id": "5ba02baefa254d5ebb98e127",
+                    "name": "Software Developement Engineer",
+                    "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tellus id interdum velit laoreet id donec ultrices tincidunt. Ut eu sem integer vitae justo eget magna. Sed velit dignissim sodales ut.,",
+                    "companyId": "5ba02a0436d1df5c24164983",
+                    "createdAt": "2018-09-17T22:33:18.238Z",
+                    "updatedAt": "2018-09-17T22:33:18.238Z",
+                    "__v": 0
+                  }
+                ]
+              }
+            }
+          }
+        }
+      },
+      "/applyjob": {
+        "post": {
+          "description": "TODO: Add Description",
+          "summary": "Apply for Job",
+          "tags": [
+            "Misc"
+          ],
+          "operationId": "ApplyjobPost",
+          "produces": [
+            "application/json"
+          ],
+          "parameters": [
+            {
+              "name": "Content-Type",
+              "in": "header",
+              "required": true,
+              "type": "string",
+              "description": ""
+            },
+            {
+              "name": "Body",
+              "in": "body",
+              "required": true,
+              "description": "",
+              "schema": {
+                "$ref": "#/definitions/ApplyForJobrequest"
+              }
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": ""
+            }
+          }
+        }
+      }
+    },
+    "definitions": {
+      "CreateCompanySuccess": {
+        "title": "Create Company Success",
+        "example": {
+          "_id": "5ba0296236d1df5c2416497a",
+          "name": "Company Test 001",
+          "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus. Nullam non nisi est sit amet facilisis. Sed risus pretium quam vulputate. Interdum velit euismod in pellentesque massa placerat duis ultricies. Ac turpis egestas sed tempus urna et pharetra. Volutpat lacus laoreet non curabitur gravida arcu. Commodo viverra maecenas accumsan lacus vel facilisis. Venenatis tellus in metus vulputate. Eu consequat ac felis donec et odio. Aliquet nec ullamcorper sit amet risus nullam eget. Diam phasellus vestibulum lorem sed risus ultricies tristique. Cursus in hac habitasse platea dictumst quisque sagittis purus sit. Pellentesque habitant morbi tristique senectus et. Dignissim convallis aenean et tortor.",
+          "yearFounded": 1998,
+          "funding": "10$ M",
+          "createdAt": "2018-09-17T22:23:30.951Z",
+          "updatedAt": "2018-09-17T22:23:30.951Z",
+          "__v": 0
+        },
+        "type": "object",
+        "properties": {
+          "_id": {
+            "description": "",
+            "example": "5ba0296236d1df5c2416497a",
+            "type": "string"
+          },
+          "name": {
+            "description": "",
+            "example": "Company Test 001",
+            "type": "string"
+          },
+          "about": {
+            "description": "",
+            "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus. Nullam non nisi est sit amet facilisis. Sed risus pretium quam vulputate. Interdum velit euismod in pellentesque massa placerat duis ultricies. Ac turpis egestas sed tempus urna et pharetra. Volutpat lacus laoreet non curabitur gravida arcu. Commodo viverra maecenas accumsan lacus vel facilisis. Venenatis tellus in metus vulputate. Eu consequat ac felis donec et odio. Aliquet nec ullamcorper sit amet risus nullam eget. Diam phasellus vestibulum lorem sed risus ultricies tristique. Cursus in hac habitasse platea dictumst quisque sagittis purus sit. Pellentesque habitant morbi tristique senectus et. Dignissim convallis aenean et tortor.",
+            "type": "string"
+          },
+          "yearFounded": {
+            "description": "",
+            "example": 1998,
+            "type": "integer",
+            "format": "int32"
+          },
+          "funding": {
+            "description": "",
+            "example": "10$ M",
+            "type": "string"
+          },
+          "createdAt": {
+            "description": "",
+            "example": "9/17/2018 10:23:30 PM",
+            "type": "string"
+          },
+          "updatedAt": {
+            "description": "",
+            "example": "9/17/2018 10:23:30 PM",
+            "type": "string"
+          },
+          "__v": {
+            "description": "",
+            "example": 0,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "_id",
+          "name",
+          "about",
+          "yearFounded",
+          "funding",
+          "createdAt",
+          "updatedAt",
+          "__v"
+        ]
+      },
+      "GetCompany": {
+        "title": "Get Company",
+        "example": {
+          "_id": "5ba0296236d1df5c2416497a",
+          "name": "Company Test 001",
+          "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus. Nullam non nisi est sit amet facilisis. Sed risus pretium quam vulputate. Interdum velit euismod in pellentesque massa placerat duis ultricies. Ac turpis egestas sed tempus urna et pharetra. Volutpat lacus laoreet non curabitur gravida arcu. Commodo viverra maecenas accumsan lacus vel facilisis. Venenatis tellus in metus vulputate. Eu consequat ac felis donec et odio. Aliquet nec ullamcorper sit amet risus nullam eget. Diam phasellus vestibulum lorem sed risus ultricies tristique. Cursus in hac habitasse platea dictumst quisque sagittis purus sit. Pellentesque habitant morbi tristique senectus et. Dignissim convallis aenean et tortor.",
+          "yearFounded": 1998,
+          "funding": "10$ M",
+          "createdAt": "2018-09-17T22:23:30.951Z",
+          "updatedAt": "2018-09-17T22:23:30.951Z",
+          "__v": 0
+        },
+        "type": "object",
+        "properties": {
+          "_id": {
+            "description": "",
+            "example": "5ba0296236d1df5c2416497a",
+            "type": "string"
+          },
+          "name": {
+            "description": "",
+            "example": "Company Test 001",
+            "type": "string"
+          },
+          "about": {
+            "description": "",
+            "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Viverra tellus in hac habitasse platea dictumst vestibulum rhoncus. Nullam non nisi est sit amet facilisis. Sed risus pretium quam vulputate. Interdum velit euismod in pellentesque massa placerat duis ultricies. Ac turpis egestas sed tempus urna et pharetra. Volutpat lacus laoreet non curabitur gravida arcu. Commodo viverra maecenas accumsan lacus vel facilisis. Venenatis tellus in metus vulputate. Eu consequat ac felis donec et odio. Aliquet nec ullamcorper sit amet risus nullam eget. Diam phasellus vestibulum lorem sed risus ultricies tristique. Cursus in hac habitasse platea dictumst quisque sagittis purus sit. Pellentesque habitant morbi tristique senectus et. Dignissim convallis aenean et tortor.",
+            "type": "string"
+          },
+          "yearFounded": {
+            "description": "",
+            "example": 1998,
+            "type": "integer",
+            "format": "int32"
+          },
+          "funding": {
+            "description": "",
+            "example": "10$ M",
+            "type": "string"
+          },
+          "createdAt": {
+            "description": "",
+            "example": "9/17/2018 10:23:30 PM",
+            "type": "string"
+          },
+          "updatedAt": {
+            "description": "",
+            "example": "9/17/2018 10:23:30 PM",
+            "type": "string"
+          },
+          "__v": {
+            "description": "",
+            "example": 0,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "_id",
+          "name",
+          "about",
+          "yearFounded",
+          "funding",
+          "createdAt",
+          "updatedAt",
+          "__v"
+        ]
+      },
+      "CreateJobrequest": {
+        "title": "Create JobRequest",
+        "example": {
+          "name": "Software Developement Engineer",
+          "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tellus id interdum velit laoreet id donec ultrices tincidunt. Ut eu sem integer vitae justo eget magna. Sed velit dignissim sodales ut.,",
+          "companyId": "5ba02a0436d1df5c24164983",
+          "questions": [
+            "5ba02b27a02a045e5001dd44",
+            "5ba02b76fa254d5ebb98e126"
+          ]
+        },
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "",
+            "example": "Software Developement Engineer",
+            "type": "string"
+          },
+          "about": {
+            "description": "",
+            "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tellus id interdum velit laoreet id donec ultrices tincidunt. Ut eu sem integer vitae justo eget magna. Sed velit dignissim sodales ut.,",
+            "type": "string"
+          },
+          "companyId": {
+            "description": "",
+            "example": "5ba02a0436d1df5c24164983",
+            "type": "string"
+          },
+          "questions": {
+            "description": "",
+            "example": [
+              "5ba02b27a02a045e5001dd44",
+              "5ba02b76fa254d5ebb98e126"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "name",
+          "about",
+          "companyId",
+          "questions"
+        ]
+      },
+      "CreateJob": {
+        "title": "Create Job",
+        "example": {
+          "questions": [
+            "5ba02b27a02a045e5001dd44",
+            "5ba02b76fa254d5ebb98e126"
+          ],
+          "status": 1,
+          "_id": "5ba02baefa254d5ebb98e127",
+          "name": "Software Developement Engineer",
+          "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tellus id interdum velit laoreet id donec ultrices tincidunt. Ut eu sem integer vitae justo eget magna. Sed velit dignissim sodales ut.,",
+          "companyId": "5ba02a0436d1df5c24164983",
+          "createdAt": "2018-09-17T22:33:18.238Z",
+          "updatedAt": "2018-09-17T22:33:18.238Z",
+          "__v": 0
+        },
+        "type": "object",
+        "properties": {
+          "questions": {
+            "description": "",
+            "example": [
+              "5ba02b27a02a045e5001dd44",
+              "5ba02b76fa254d5ebb98e126"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "description": "",
+            "example": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "_id": {
+            "description": "",
+            "example": "5ba02baefa254d5ebb98e127",
+            "type": "string"
+          },
+          "name": {
+            "description": "",
+            "example": "Software Developement Engineer",
+            "type": "string"
+          },
+          "about": {
+            "description": "",
+            "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tellus id interdum velit laoreet id donec ultrices tincidunt. Ut eu sem integer vitae justo eget magna. Sed velit dignissim sodales ut.,",
+            "type": "string"
+          },
+          "companyId": {
+            "description": "",
+            "example": "5ba02a0436d1df5c24164983",
+            "type": "string"
+          },
+          "createdAt": {
+            "description": "",
+            "example": "9/17/2018 10:33:18 PM",
+            "type": "string"
+          },
+          "updatedAt": {
+            "description": "",
+            "example": "9/17/2018 10:33:18 PM",
+            "type": "string"
+          },
+          "__v": {
+            "description": "",
+            "example": 0,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "questions",
+          "status",
+          "_id",
+          "name",
+          "about",
+          "companyId",
+          "createdAt",
+          "updatedAt",
+          "__v"
+        ]
+      },
+      "CreateQuestions": {
+        "title": "Create Questions",
+        "example": {
+          "_id": "5ba02b76fa254d5ebb98e126",
+          "question": "What is your best skillset?",
+          "createdAt": "2018-09-17T22:32:22.688Z",
+          "updatedAt": "2018-09-17T22:32:22.688Z",
+          "__v": 0
+        },
+        "type": "object",
+        "properties": {
+          "_id": {
+            "description": "",
+            "example": "5ba02b76fa254d5ebb98e126",
+            "type": "string"
+          },
+          "question": {
+            "description": "",
+            "example": "What is your best skillset?",
+            "type": "string"
+          },
+          "createdAt": {
+            "description": "",
+            "example": "9/17/2018 10:32:22 PM",
+            "type": "string"
+          },
+          "updatedAt": {
+            "description": "",
+            "example": "9/17/2018 10:32:22 PM",
+            "type": "string"
+          },
+          "__v": {
+            "description": "",
+            "example": 0,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "_id",
+          "question",
+          "createdAt",
+          "updatedAt",
+          "__v"
+        ]
+      },
+      "GetQuestion": {
+        "title": "Get Question",
+        "example": {
+          "_id": "5ba02b27a02a045e5001dd44",
+          "question": "Why do you wanna join our company?",
+          "createdAt": "2018-09-17T22:31:03.064Z",
+          "updatedAt": "2018-09-17T22:31:03.064Z",
+          "__v": 0
+        },
+        "type": "object",
+        "properties": {
+          "_id": {
+            "description": "",
+            "example": "5ba02b27a02a045e5001dd44",
+            "type": "string"
+          },
+          "question": {
+            "description": "",
+            "example": "Why do you wanna join our company?",
+            "type": "string"
+          },
+          "createdAt": {
+            "description": "",
+            "example": "9/17/2018 10:31:03 PM",
+            "type": "string"
+          },
+          "updatedAt": {
+            "description": "",
+            "example": "9/17/2018 10:31:03 PM",
+            "type": "string"
+          },
+          "__v": {
+            "description": "",
+            "example": 0,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "_id",
+          "question",
+          "createdAt",
+          "updatedAt",
+          "__v"
+        ]
+      },
+      "GetJob": {
+        "title": "Get Job",
+        "example": {
+          "questions": [
+            "5ba02b27a02a045e5001dd44",
+            "5ba02b76fa254d5ebb98e126"
+          ],
+          "status": 1,
+          "_id": "5ba02baefa254d5ebb98e127",
+          "name": "Software Developement Engineer",
+          "about": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tellus id interdum velit laoreet id donec ultrices tincidunt. Ut eu sem integer vitae justo eget magna. Sed velit dignissim sodales ut.,",
+          "companyId": "5ba02a0436d1df5c24164983",
+          "createdAt": "2018-09-17T22:33:18.238Z",
+          "updatedAt": "2018-09-17T22:33:18.238Z",
+          "__v": 0
+        },
+        "type": "object",
+        "properties": {
+          "questions": {
+            "description": "",
+            "example": [
+              "5ba02b27a02a045e5001dd44",
+              "5ba02b76fa254d5ebb98e126"
+            ],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "status": {
+            "description": "",
+            "example": 1,
+            "type": "integer",
+            "format": "int32"
+          },
+          "_id": {
+            "description": "",
+            "example": "5ba02baefa254d5ebb98e127",
+            "type": "string"
+          },
+          "name": {
+            "description": "",
+            "example": "Software Developement Engineer",
+            "type": "string"
+          },
+          "about": {
+            "description": "",
+            "example": "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Tellus id interdum velit laoreet id donec ultrices tincidunt. Ut eu sem integer vitae justo eget magna. Sed velit dignissim sodales ut.,",
+            "type": "string"
+          },
+          "companyId": {
+            "description": "",
+            "example": "5ba02a0436d1df5c24164983",
+            "type": "string"
+          },
+          "createdAt": {
+            "description": "",
+            "example": "9/17/2018 10:33:18 PM",
+            "type": "string"
+          },
+          "updatedAt": {
+            "description": "",
+            "example": "9/17/2018 10:33:18 PM",
+            "type": "string"
+          },
+          "__v": {
+            "description": "",
+            "example": 0,
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "questions",
+          "status",
+          "_id",
+          "name",
+          "about",
+          "companyId",
+          "createdAt",
+          "updatedAt",
+          "__v"
+        ]
+      },
+      "ApplyForJobrequest": {
+        "title": "Apply for JobRequest",
+        "example": {
+          "companyId": "5ba02a0436d1df5c24164983",
+          "jobId": "5ba02baefa254d5ebb98e127",
+          "userId": "",
+          "answers": [
+            {
+              "question": "5ba02b76fa254d5ebb98e126",
+              "answer": "ABCDABCD"
+            },
+            {
+              "question": "5ba02b27a02a045e5001dd44",
+              "answer": "XYZCYXA"
+            }
+          ]
+        },
+        "type": "object",
+        "properties": {
+          "companyId": {
+            "description": "",
+            "example": "5ba02a0436d1df5c24164983",
+            "type": "string"
+          },
+          "jobId": {
+            "description": "",
+            "example": "5ba02baefa254d5ebb98e127",
+            "type": "string"
+          },
+          "userId": {
+            "description": "",
+            "type": "string"
+          },
+          "answers": {
+            "description": "",
+            "example": [
+              {
+                "question": "5ba02b76fa254d5ebb98e126",
+                "answer": "ABCDABCD"
+              },
+              {
+                "question": "5ba02b27a02a045e5001dd44",
+                "answer": "XYZCYXA"
+              }
+            ],
+            "type": "array",
+            "items": {
+              "$ref": "#/definitions/Answer"
+            }
+          }
+        },
+        "required": [
+          "companyId",
+          "jobId",
+          "userId",
+          "answers"
+        ]
+      },
+      "Answer": {
+        "title": "Answer",
+        "example": {
+          "question": "5ba02b76fa254d5ebb98e126",
+          "answer": "ABCDABCD"
+        },
+        "type": "object",
+        "properties": {
+          "question": {
+            "description": "",
+            "example": "5ba02b76fa254d5ebb98e126",
+            "type": "string"
+          },
+          "answer": {
+            "description": "",
+            "example": "ABCDABCD",
+            "type": "string"
+          }
+        },
+        "required": [
+          "question",
+          "answer"
+        ]
+      }
+    }
+  }

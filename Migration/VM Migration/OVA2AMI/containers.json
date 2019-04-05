@@ -1,0 +1,8 @@
+[{
+    "Description": "vmdk migration",
+    "Format": "vmdk",
+    "UserBucket": {
+        "S3Bucket": "vmwareimport001",
+        "S3Key": "Ubuntu_64-bit-disk1.vmdk"
+    }
+}]

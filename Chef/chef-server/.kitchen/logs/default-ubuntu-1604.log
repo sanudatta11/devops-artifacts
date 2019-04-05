@@ -1,0 +1,9 @@
+I, [2019-03-19T00:19:43.803503 #8720]  INFO -- default-ubuntu-1604: -----> Creating <default-ubuntu-1604>...
+I, [2019-03-19T00:19:47.736171 #8720]  INFO -- default-ubuntu-1604: Bringing machine 'default' up with 'virtualbox' provider...
+I, [2019-03-19T00:19:49.640078 #8720]  INFO -- default-ubuntu-1604: ==> default: Box 'bento/ubuntu-16.04' could not be found. Attempting to find and install...
+I, [2019-03-19T00:19:49.640259 #8720]  INFO -- default-ubuntu-1604:     default: Box Provider: virtualbox
+I, [2019-03-19T00:19:49.640414 #8720]  INFO -- default-ubuntu-1604:     default: Box Version: >= 0
+I, [2019-03-19T00:19:51.543035 #8720]  INFO -- default-ubuntu-1604: ==> default: Loading metadata for box 'bento/ubuntu-16.04'
+I, [2019-03-19T00:19:51.543165 #8720]  INFO -- default-ubuntu-1604:     default: URL: https://vagrantcloud.com/bento/ubuntu-16.04
+I, [2019-03-19T00:19:53.581094 #8720]  INFO -- default-ubuntu-1604: ==> default: Adding box 'bento/ubuntu-16.04' (v201812.27.0) for provider: virtualbox
+I, [2019-03-19T00:19:53.581183 #8720]  INFO -- default-ubuntu-1604:     default: Downloading: https://vagrantcloud.com/bento/boxes/ubuntu-16.04/versions/201812.27.0/providers/virtualbox.box

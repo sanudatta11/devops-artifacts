@@ -1,0 +1,19 @@
+{
+	"builders" : [
+			{
+				"type" : "amazon-ebs",
+				"region" : "us-east-1",
+				"source_ami" : "ami-9abea4fb",
+				"instance_type" : "t2.micro",
+				"ssh_username" : "ubuntu",
+				"ami_name"  : "MiddleTier-{{isotime | clean_ami_name}}",
+				"ami_description" : "Amazing AMI Designed by Fantastic Architect",
+				"tags" : {
+					"role" : "MiddleTier"
+				},
+				"run_tags" : {
+					"role" : "buildSystem" 
+				}
+			}			
+		]
+}

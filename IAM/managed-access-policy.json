@@ -1,0 +1,44 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "ManageUsersPermissions",
+            "Effect": "Allow",
+            "Action": [
+                "iam:ChangePassword",
+                "iam:CreateAccessKey",
+                "iam:CreateLoginProfile",
+                "iam:CreateUser",
+                "iam:DeleteAccessKey",
+                "iam:DeleteLoginProfile",
+                "iam:DeleteUser",
+                "iam:UpdateAccessKey",
+                "iam:ListAttachedUserPolicies",
+                "iam:ListPolicies",
+                "iam:ListUserPolicies",
+                "iam:ListGroups",
+                "iam:ListGroupsForUser",
+                "iam:GetPolicy",
+                "iam:GetAccountSummary"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "LimitedAttachmentPermissions",
+            "Effect": "Allow",
+            "Action": [
+                "iam:AttachUserPolicy",
+                "iam:DetachUserPolicy"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "ArnEquals": {
+                    "iam:PolicyArn": [
+                        "arn:aws:iam::############:policy/MyProjectS3Access",
+                        "arn:aws:iam::aws:policy/AmazonDynamoDBFullAccess"
+                    ]
+                }
+            }
+        }
+    ]
+}

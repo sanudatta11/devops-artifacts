@@ -1,0 +1,29 @@
+{
+  "location": {
+    "value": "West US"
+  },
+  "vpcGatewayIpAddress": {
+    "value": "3.211.243.7"
+  },
+  "vpcAddressPrefix": {
+    "value": "172.31.0.0/16"
+  },
+  "azureVNetAddressPrefix": {
+    "value": "10.3.0.0/16"
+  },
+  "subnetPrefix": {
+    "value": "10.3.0.0/24"
+  },
+  "gatewaySubnetPrefix": {
+    "value": "10.3.200.0/29"
+  },
+  "adminPassword": {
+    "value": "azure@1234"
+  },
+  "newStorageAccountName": {
+    "value": "vnet-storage"
+  },
+  "sharedKey": {
+    "value": "Or6y26qMjDj6pXa"
+  }
+}

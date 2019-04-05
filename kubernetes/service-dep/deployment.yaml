@@ -1,0 +1,17 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: webapp1
+spec:
+  replicas: 4
+  template:
+    metadata:
+      labels:
+        app: webapp1
+    spec:
+      containers:
+      - name: webapp1
+        image: sanurocks5/socialcops:latest
+        ports:
+        - containerPort: 80
+

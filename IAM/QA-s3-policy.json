@@ -1,0 +1,33 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowListBucketIfSpecificPrefixIsIncludedInRequest",
+            "Action": [
+                "s3:ListBucket"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:s3:::iamsecurecorp"
+            ],
+            "Condition": {
+                "StringLike": {
+                    "s3:prefix": [
+                        "QA/*"
+                    ]
+                }
+            }
+        },
+        {
+            "Sid": "AllowUserToReadWriteObjectDataInDevelopmentFolder",
+            "Action": [
+                "s3:GetObject",
+                "s3:PutObject"
+            ],
+            "Effect": "Allow",
+            "Resource": [
+                "arn:aws:s3:::iamsecurecorp/QA/*"
+            ]
+        }
+    ]
+}

@@ -1,0 +1,9 @@
+//Importing a OVA into AWS as an AMI
+aws iam create-role --role-name vmimport --assume-role-policy-document file://trust-policy.json
+aws iam put-role-policy --role-name vmimport --policy-name vmimport --policy-document file://role-policy.json
+aws ec2 import-image --description "OVA Migration" --disk-containers file://containers.json
+aws ec2 describe-import-image-tasks --import-task-ids <ID>
+
+//Exporting a Running EC2 image which was previously imported to a OVA again
+aws ec2 create-instance-export-task --instance-id <ID> --target-environment <TEV> \--export-to-s3-task DiskImageFormat=vmdk,ContainerFormat=ova,S3Bucket=vmimport,S3Prefix=dr/
+aws ec2 describe-export-tasks --export-task-ids <ID>

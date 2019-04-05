@@ -1,0 +1,3 @@
+#For getting the public ip of an instance from metadata
+ipaddr=$(curl http://169.254.169.254/latest/meta-data/public-ipv4)
+echo $ipaddr

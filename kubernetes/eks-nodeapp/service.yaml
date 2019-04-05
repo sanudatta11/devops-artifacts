@@ -1,0 +1,13 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: nodeapp
+spec:
+  selector:
+    app: nodeapp
+    tier: backend
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: http
+  type: LoadBalancer
