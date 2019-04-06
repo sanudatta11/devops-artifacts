@@ -26,5 +26,5 @@ variable "environment_tag" {
 }
 variable "public_key_path" {
   description = "Public key path"
-  default = "~/.ssh/id_rsa.pub"
+  # default = "aws_terraform.pub"
 }

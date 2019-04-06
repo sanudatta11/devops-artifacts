@@ -1,12 +1,12 @@
 {
   "variables": {
-    "aws_access_key": "{{env `AWS_ACCESS_KEY_ID`}}",
-    "aws_secret_key": "{{env `AWS_SECRET_ACCESS_KEY`}}",
+    "aws_access_key": "",
+    "aws_secret_key": "",
     "region": "us-east-2",
     "ssh_username": "ec2-user",
     "base_ami": "ami-0303c7b2e7066b60d",
     "instance_type": "t2.micro",
-    "subnet_id": "subnet-0553e12f46221b5b7"
+    "subnet_id": "subnet-01456b4f63ba4d5c4"
   },
   "builders": [
     {
