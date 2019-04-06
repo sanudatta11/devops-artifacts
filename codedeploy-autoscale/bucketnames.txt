@@ -1,5 +1,5 @@
-US East (Ohio)	aws-codedeploy-us-east-2	us-east-2
 US East (N. Virginia)	aws-codedeploy-us-east-1	us-east-1
+US East (Ohio)	aws-codedeploy-us-east-2	us-east-2
 US West (N. California)	aws-codedeploy-us-west-1	us-west-1
 US West (Oregon)	aws-codedeploy-us-west-2	us-west-2
 Canada (Central)	aws-codedeploy-ca-central-1	ca-central-1
