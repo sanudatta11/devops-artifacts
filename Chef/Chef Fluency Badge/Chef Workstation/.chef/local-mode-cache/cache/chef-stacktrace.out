@@ -1,0 +1,18 @@
+Generated at 2019-05-25 07:58:32 +0000
+Net::HTTPServerException: 412 "Precondition Failed"
+/opt/chefdk/embedded/lib/ruby/2.5.0/net/http/response.rb:122:in `error!'
+/opt/chefdk/embedded/lib/ruby/gems/2.5.0/gems/chef-14.12.9/lib/chef/http.rb:152:in `request'
+/opt/chefdk/embedded/lib/ruby/gems/2.5.0/gems/chef-14.12.9/lib/chef/http.rb:131:in `post'
+/opt/chefdk/embedded/lib/ruby/gems/2.5.0/gems/chef-14.12.9/lib/chef/policy_builder/expand_node_object.rb:177:in `sync_cookbooks'
+/opt/chefdk/embedded/lib/ruby/gems/2.5.0/gems/chef-14.12.9/lib/chef/policy_builder/expand_node_object.rb:83:in `setup_run_context'
+/opt/chefdk/embedded/lib/ruby/gems/2.5.0/gems/chef-14.12.9/lib/chef/client.rb:515:in `setup_run_context'
+/opt/chefdk/embedded/lib/ruby/gems/2.5.0/gems/chef-14.12.9/lib/chef/client.rb:281:in `run'
+/opt/chefdk/embedded/lib/ruby/gems/2.5.0/gems/chef-14.12.9/lib/chef/application.rb:303:in `run_with_graceful_exit_option'
+/opt/chefdk/embedded/lib/ruby/gems/2.5.0/gems/chef-14.12.9/lib/chef/application.rb:279:in `block in run_chef_client'
+/opt/chefdk/embedded/lib/ruby/gems/2.5.0/gems/chef-14.12.9/lib/chef/local_mode.rb:44:in `with_server_connectivity'
+/opt/chefdk/embedded/lib/ruby/gems/2.5.0/gems/chef-14.12.9/lib/chef/application.rb:261:in `run_chef_client'
+/opt/chefdk/embedded/lib/ruby/gems/2.5.0/gems/chef-14.12.9/lib/chef/application/client.rb:449:in `run_application'
+/opt/chefdk/embedded/lib/ruby/gems/2.5.0/gems/chef-14.12.9/lib/chef/application.rb:66:in `run'
+/opt/chefdk/embedded/lib/ruby/gems/2.5.0/gems/chef-14.12.9/bin/chef-client:25:in `<top (required)>'
+/usr/bin/chef-client:306:in `load'
+/usr/bin/chef-client:306:in `<main>'

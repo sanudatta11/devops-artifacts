@@ -1,0 +1,3 @@
+FROM ubuntu 
+COPY . .
+CMD ["/ws-aus-day1.bin-489229"]

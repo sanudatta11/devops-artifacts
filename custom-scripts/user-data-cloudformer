@@ -1,0 +1,4 @@
+#!/bin/bash -xe
+yum update -y aws-cfn-bootstrap
+/opt/aws/bin/cfn-init -v          --stack arn:aws:cloudformation:us-east-1:761284154140:stack/ShorttoStack-Cloudformer/cb314790-6116-11e9-b027-0e7698e0f2e8         --resource WebServer          --configsets full_install          --region us-east-1
+/opt/aws/bin/cfn-signal -e $?          --stack arn:aws:cloudformation:us-east-1:761284154140:stack/ShorttoStack-Cloudformer/cb314790-6116-11e9-b027-0e7698e0f2e8         --resource WebServer          --region us-east-1
