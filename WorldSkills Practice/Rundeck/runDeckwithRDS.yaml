@@ -1,0 +1,99 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "This is the first CF Template for running Rundeck via UserData!"
+Parameters:
+  NameOfService:
+    Description: "The name of the service this stack is to be used for."
+    Type: String
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access into the server
+    Type: AWS::EC2::KeyPair::KeyName
+  DatabaseName:
+    Type: String
+    Default: rundeck
+  DatabaseUser:
+    Type: String
+    Default: rundeck
+  DatabasePassword:
+    Type: String
+    Default: rundeck123
+    NoEcho: true
+  EnvironmentSize:
+    Type: String
+    Default: SMALL
+    AllowedValues:
+      - SMALL
+      - MEDIUM
+      - LARGE
+    Description: Select Environment Size (S,M,L)
+Mappings:
+  InstanceSize:
+    SMALL:
+      "EC2" : "t2.micro"
+      "DB" : "db.t2.micro"
+    MEDIUM:
+      "EC2" : "t2.small"
+      "DB" : "db.t2.small"
+    LARGE:
+      "EC2" : "t2.medium"
+      "DB" : "db.t2.medium"
+Resources:
+  DB:
+    Type: "AWS::RDS::DBInstance"
+    Properties:
+      AllocatedStorage: '5'
+      StorageType: gp2
+      DBInstanceClass: !FindInMap [InstanceSize, !Ref EnvironmentSize, DB]
+      DBName: !Ref DatabaseName
+      Engine: MySQL
+      MasterUsername: !Ref DatabaseUser
+      MasterUserPassword: !Ref DatabasePassword
+  EC2:
+    Type: AWS::EC2::Instance
+    Properties:
+      AvailabilityZone:
+        Fn::Select:
+        - 0
+        - Fn::GetAZs: ''
+      ImageId: ami-00e782930f1c3dbc7
+      InstanceType: !FindInMap [InstanceSize, !Ref EnvironmentSize, EC2]
+      KeyName: !Ref KeyName
+      UserData:
+        "Fn::Base64":
+          !Sub |
+            #!/bin/bash
+            yum -y install java-1.8.0
+            rpm -Uvh https://repo.rundeck.org/latest.rpm
+            yum -y install rundeck
+            service rundeckd start
+            export DNS_NAME=$(curl -s http://169.254.169.254/latest/meta-data/public-hostname/)
+            echo $DNS_NAME
+            sed -i "s/localhost/$DNS_NAME/g" /etc/rundeck/rundeck-config.properties
+            yum upgrade rundeck rundeck-config
+            service rundeckd restart
+            service rundeckd start
+            echo NameOfService=${NameOfService}
+      SecurityGroupIds:
+        - !Ref RunDeckSG
+      Tags:
+        - Key: Name
+          Value: !Ref NameOfService
+  RunDeckSG:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Open Ports 22 and 4440
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 22
+        ToPort: 22
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: 4440
+        ToPort: 4440
+        CidrIp: 0.0.0.0/0
+Outputs:
+  URL:
+    Description: The Public DNS for the Rundeck EC2 Instance
+    Value: !Sub 'http://${EC2.PublicDnsName}:4440'
+  DBEndpoint:
+    Description: The DB Endpoint for the RDS
+    Value: !Sub 'http://${DB.Endpoint.Address}'
