@@ -4,16 +4,61 @@ Parameters:
   KeyName:
     Description: Name of an existing EC2 KeyPair to enable SSH access into the server
     Type: AWS::EC2::KeyPair::KeyName
-  DatabaseName:
+  DBName:
+    Default: rundeckDb
+    Description: The database name
     Type: String
-    Default: rundeck
-  DatabaseUser:
+    MinLength: '1'
+    MaxLength: '64'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric
+      characters.
+  DBUser:
+    NoEcho: 'true'
+    Description: The database admin account username
     Type: String
+    MinLength: '1'
+    MaxLength: '16'
+    AllowedPattern: '[a-zA-Z][a-zA-Z0-9]*'
+    ConstraintDescription: must begin with a letter and contain only alphanumeric
+      characters.
     Default: rundeck
-  DatabasePassword:
+  DBPassword:
+    NoEcho: 'true'
+    Description: The database admin account password
     Type: String
     Default: rundeck123
-    NoEcho: true
+    MinLength: '1'
+    MaxLength: '41'
+    AllowedPattern: '[a-zA-Z0-9]+'
+    ConstraintDescription: must contain only alphanumeric characters.
+  DBAllocatedStorage:
+    Default: '5'
+    Description: The size of the database (Gb)
+    Type: Number
+    MinValue: '5'
+    MaxValue: '1024'
+    ConstraintDescription: must be between 5 and 1024Gb.
+  DBInstanceClass:
+    Description: The database instance type
+    Type: String
+    Default: db.t2.small
+    AllowedValues: [db.t1.micro, db.m1.small, db.m1.medium, db.m1.large, db.m1.xlarge,
+      db.m2.xlarge, db.m2.2xlarge, db.m2.4xlarge, db.m3.medium, db.m3.large, db.m3.xlarge,
+      db.m3.2xlarge, db.m4.large, db.m4.xlarge, db.m4.2xlarge, db.m4.4xlarge, db.m4.10xlarge,
+      db.r3.large, db.r3.xlarge, db.r3.2xlarge, db.r3.4xlarge, db.r3.8xlarge, db.m2.xlarge,
+      db.m2.2xlarge, db.m2.4xlarge, db.cr1.8xlarge, db.t2.micro, db.t2.small, db.t2.medium,
+      db.t2.large]
+    ConstraintDescription: must select a valid database instance type.
+  MultiAZ:
+    Description: Multi-AZ master database
+    Type: String
+    Default: 'false'
+    AllowedValues: ['true', 'false']
+    ConstraintDescription: must be true or false.
+  RunDeckFileName:
+    Type: String
+    Default: rundeck-3.0.22-20190512.war
   EnvironmentSize:
     Type: String
     Default: SMALL
@@ -40,16 +85,59 @@ Mappings:
       "EC2" : "t2.medium"
       "DB" : "db.t2.medium"
 Resources:
-  DB:
-    Type: "AWS::RDS::DBInstance"
+  ALBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
     Properties:
-      AllocatedStorage: '5'
-      StorageType: gp2
-      DBInstanceClass: !FindInMap [InstanceSize, !Ref EnvironmentSize, DB]
-      DBName: !Ref DatabaseName
-      Engine: MySQL
-      MasterUsername: !Ref DatabaseUser
-      MasterUserPassword: !Ref DatabasePassword
+      GroupDescription: ALB Security Group
+      VpcId: !Ref VpcId
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: EC2 Instance
+  EC2InboundRule: # EC2 can only accept traffic from ALB
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: tcp
+      FromPort: 80
+      ToPort: 80
+      SourceSecurityGroupId:
+        !GetAtt
+        - ALBSecurityGroup
+        - GroupId
+      GroupId:
+        !GetAtt
+        - EC2SecurityGroup
+        - GroupId
+  DBEC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Open database for access to EC2
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '3306'
+        ToPort: '3306'
+        SourceSecurityGroupName: !Ref 'EC2SecurityGroup'
+  MasterDB:
+   Type: AWS::RDS::DBInstance
+   Properties:
+     DBName: !Ref 'DBName'
+     AllocatedStorage: !Ref 'DBAllocatedStorage'
+     DBInstanceClass: !Ref 'DBInstanceClass'
+     Engine: MySQL
+     MasterUsername: !Ref 'DBUser'
+     MasterUserPassword: !Ref 'DBPassword'
+     MultiAZ: !Ref 'MultiAZ'
+     Tags:
+     - Key: Name
+       Value: Master Database
+     VPCSecurityGroups:
+       - !GetAtt [DBEC2SecurityGroup, GroupId]
+   DeletionPolicy: Snapshot
   LoadBalancer: # Application Load Balancer
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
@@ -61,7 +149,7 @@ Resources:
     Properties:
       LoadBalancerArn: !Ref LoadBalancer
       Port: 80
-      Protocol: TCP
+      Protocol: HTTP
       DefaultActions:
         - Type: forward
           TargetGroupArn:
@@ -69,8 +157,8 @@ Resources:
   TargetGroup:
     Type: AWS::ElasticLoadBalancingV2::TargetGroup
     Properties:
-      Port: 4440
-      Protocol: TCP
+      Port: 80
+      Protocol: HTTP
       VpcId: !Ref VpcId
   AutoScalingGroup:
     Type: AWS::AutoScaling::AutoScalingGroup
@@ -91,48 +179,17 @@ Resources:
         "Fn::Base64":
           !Sub |
             #!/bin/bash
-            yum -y install java-1.8.0
-            rpm -Uvh tcps://repo.rundeck.org/latest.rpm
-            yum -y install rundeck
-            service rundeckd start
-            sed -i "s/localhost/${LoadBalancer.DNSName}/g" /etc/rundeck/rundeck-config.properties
-            yum upgrade rundeck rundeck-config
-            service rundeckd restart
-            service rundeckd start
+            yum -y install wget
+            yum -y install java
+            export RDECK_HTTP_PORT=80
+            wget --quiet https://download.rundeck.org/war/${RunDeckFileName}
+            java -server -Dserver.session.timeout=3600 -Dserver.port=80 -Dserver.address=${LoadBalancer.DNSName} -jar ${RunDeckFileName} &
       SecurityGroups:
         - !Ref EC2SecurityGroup
-  ALBSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: ALB Security Group
-      VpcId: !Ref VpcId
-      SecurityGroupIngress:
-        - IpProtocol: tcp
-          FromPort: 80
-          ToPort: 80
-          CidrIp: 0.0.0.0/0
-  EC2SecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: EC2 Instance
-  EC2InboundRule: # EC2 can only accept traffic from ALB
-    Type: AWS::EC2::SecurityGroupIngress
-    Properties:
-      IpProtocol: tcp
-      FromPort: 4440
-      ToPort: 4440
-      SourceSecurityGroupId:
-        !GetAtt
-        - ALBSecurityGroup
-        - GroupId
-      GroupId:
-        !GetAtt
-        - EC2SecurityGroup
-        - GroupId
 Outputs:
   URL:
     Description: The Public DNS for the Rundeck EC2 Instance
     Value: !Sub 'http://${LoadBalancer.DNSName}/'
   DBEndpoint:
     Description: The DB Endpoint for the RDS
-    Value: !Sub 'http://${DB.Endpoint.Address}/'
+    Value: !Sub 'http://${MasterDB.Endpoint.Address}/'
