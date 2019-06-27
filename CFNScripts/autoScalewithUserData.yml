@@ -160,6 +160,7 @@ Resources:
       MaxSize: 10
       TargetGroupARNs:
         - !Ref EC2TargetGroup
+      VPCZoneIdentifier: EC2ubnetIds
     UpdatePolicy:
       AutoScalingReplacingUpdate:
         WillReplace: True
