@@ -88,7 +88,7 @@ Resources:
   DBSubnetGroup:
     Type: AWS::RDS::DBSubnetGroup
     Properties:
-      DBSubnetGroupName: RDSSubnetGroup
+      DBSubnetGroupName: !Ref DBSubnetGroupName
       DBSubnetGroupDescription: DB Subnet Group which includes the DB Subnets Created
       SubnetIds:
         Ref: DBSubnetGroupIdList

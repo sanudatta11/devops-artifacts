@@ -653,7 +653,7 @@ Outputs:
     Value: !Ref ApplicationSG
   ALBSecurityGroup:
     Description: ALB SG Id
-    Value: !Ref ApplicationSG
+    Value: !Ref ALBSecurityGroup
 
 Metadata:
   'AWS::CloudFormation::Interface':

@@ -101,7 +101,7 @@ Parameters:
   RDSHostname:
     Type: String
     Description: RDS String for Wordpress connection
-    AllowedPattern : "rds-db.[a-zA-Z0-9]+.[a-zA-Z0-9\-]+.rds.amazonaws.com"
+    AllowedPattern : 'rdsdb.[a-zA-Z0-9]+.[a-zA-Z0-9\-]+.rds.amazonaws.com'
   RDSDBName:
     Type: String
     Description: DB Name for RDS
