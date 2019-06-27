@@ -84,6 +84,20 @@ Parameters:
     MinLength: '10'
     MaxLength: '18'
     AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+  DBSubnetCidrBlock1:
+    Description: Enter DB Subnet 1 CIDR Block.
+    Type: String
+    Default: 10.0.7.0/24
+    MinLength: '10'
+    MaxLength: '18'
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
+  DBSubnetCidrBlock2:
+    Description: Enter DB Subnet 2 CIDR Block.
+    Type: String
+    Default: 10.0.8.0/24
+    MinLength: '10'
+    MaxLength: '18'
+    AllowedPattern: '(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})/(\d{1,2})'
   RemoteAccessNetwork:
     Description: >-
       Source Network IP CIDR Block such as an Office that can access instances
@@ -302,6 +316,38 @@ Resources:
             - ''
             - - !Ref 'AWS::StackName'
               - '-private-az3'
+  DBSubnet1:
+    Type: 'AWS::EC2::Subnet'
+    DependsOn: VPC
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Join
+        - ''
+        - - !Ref 'AWS::Region'
+          - !Ref AvailabilityZone1
+      CidrBlock: !Ref DBSubnetCidrBlock1
+      Tags:
+        - Key: Name
+          Value: !Join
+            - ''
+            - - !Ref 'AWS::StackName'
+              - '-db-az1'
+  DBSubnet2:
+    Type: 'AWS::EC2::Subnet'
+    DependsOn: VPC
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Join
+        - ''
+        - - !Ref 'AWS::Region'
+          - !Ref AvailabilityZone2
+      CidrBlock: !Ref DBSubnetCidrBlock2
+      Tags:
+        - Key: Name
+          Value: !Join
+            - ''
+            - - !Ref 'AWS::StackName'
+              - '-db-az2'
   PrivateRouteTable:
     Type: 'AWS::EC2::RouteTable'
     DependsOn: VPC
@@ -520,42 +566,50 @@ Resources:
     Properties:
       SubnetId: !Ref PrivateSubnet3
       NetworkAclId: !Ref PrivateNetworkAcl
-  InternalAccessSecurityGroup:
+  ALBSecurityGroup:
     Type: 'AWS::EC2::SecurityGroup'
-    DependsOn: VPC
     Properties:
-      GroupDescription: Instance to Instance Access in VPC
+      GroupDescription: Public to ALB Access
       VpcId: !Ref VPC
       Tags:
         - Key: Name
           Value: !Join
             - ''
             - - !Ref 'AWS::StackName'
-              - '-instance-to-instance'
-  InternalAccessSecurityGroupIngress:
-    Type: 'AWS::EC2::SecurityGroupIngress'
-    DependsOn: InternalAccessSecurityGroup
-    Properties:
-      GroupId: !Ref InternalAccessSecurityGroup
-      IpProtocol: '-1'
-      SourceSecurityGroupId: !Ref InternalAccessSecurityGroup
-  RemoteAccessSecurityGroup:
-    Type: 'AWS::EC2::SecurityGroup'
-    Properties:
-      GroupDescription: Instance Access over VPN/Direct Connect
-      VpcId: !Ref VPC
-      Tags:
-        - Key: Name
-          Value: !Join
-            - ''
-            - - !Ref 'AWS::StackName'
-              - '-remote-to-instance'
+              - '-public-to-elb'
       SecurityGroupIngress:
-        - IpProtocol: '-1'
-          CidrIp: !Ref RemoteAccessNetwork
+      - IpProtocol: tcp
+        FromPort: 80
+        ToPort: 80
+        CidrIp: 0.0.0.0/0
       SecurityGroupEgress:
-        - IpProtocol: '-1'
-          CidrIp: 0.0.0.0/0
+      - IpProtocol: '-1'
+        FromPort: -1
+        ToPort: -1
+        CidrIp: 0.0.0.0/0
+  ApplicationSG:
+    Type: 'AWS::EC2::SecurityGroup'
+    DependsOn:
+      - VPC
+      - ALBSecurityGroup
+    Properties:
+      GroupDescription: Application SG for Autoscaling
+      VpcId: !Ref VPC
+      Tags:
+        - Key: Name
+          Value: !Join
+            - ''
+            - - !Ref 'AWS::StackName'
+              - '-elb-to-instance'
+  ApplicationSGIngress:
+    Type: 'AWS::EC2::SecurityGroupIngress'
+    DependsOn: ApplicationSG
+    Properties:
+      GroupId: !Ref ApplicationSG
+      IpProtocol: 'tcp'
+      FromPort: 80
+      ToPort: 80
+      SourceSecurityGroupId: !Ref ALBSecurityGroup
   NatGateway:
     Type: 'AWS::EC2::NatGateway'
     DependsOn: NatEIP
@@ -663,50 +717,9 @@ Outputs:
   InternetGateway:
     Description: Internet Gateway Created for VPC
     Value: !Ref InternetGateway
-  InternalAccessSecurityGroup:
-    Description: Instance to Instance Access within VPC
-    Value: !Ref InternalAccessSecurityGroup
-  RemoteAccessSecurityGroup:
-    Description: >-
-      Remote Network or IP that can Access the instances of VPN or Direct
-      Connect.
-    Value: !Ref RemoteAccessSecurityGroup
-  PublicNetworkACLRuleNumbers:
-    Description: Public Network ACL Rules Numbers Created.
-    Value: !Join
-      - ''
-      - - Inbound (
-        - !Ref AllowHttpToPublicRuleNumber
-        - ', '
-        - !Ref AllowHttpsToPublicRuleNumber
-        - ', '
-        - !Ref AllowReturnTrafficToPublicRuleNumber
-        - ', '
-        - !Ref AllowVpcSubnetsRuleNumber
-        - ') '
-        - Outbound (
-        - !Ref AllowAllOutboundPublicRuleNumber
-        - )
-  PrivateNetworkACLRuleNumbers:
-    Description: Private Network ACL Rules Numbers Created.
-    Value: !Join
-      - ''
-      - - Inbound (
-        - !Ref AllowAllInboundPrivateRuleNumber
-        - ') '
-        - Outbound (
-        - !Ref AllowAllOutboundPrivateRuleNumber
-        - )
   NatEIP:
     Description: NAT Elastic IP Address
     Value: !Ref NatEIP
-  PublicNetworkACLRuleNumbers:
-    Description: Public Network ACL Rules Number Created.
-    Value: !Join
-      - ''
-      - - Inbound (
-        - !Ref AllowNatRuleNumber
-        - )
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:

@@ -1,0 +1,166 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: "This is the template to Deploy the Autoscale version of the Application with ALB"
+Parameters:
+  KeyName:
+    Description: Name of an existing EC2 KeyPair to enable SSH access into the server
+    Type: AWS::EC2::KeyPair::KeyName
+    AllowedPattern : "[a-zA-Z0-9]+"
+  ALBType:
+    Description:    AWS Load Balancer Type.
+    Type:           String
+    Default:        "application"
+    AllowedValues:
+      - application
+      - network
+  ALBScheme:
+    Description:    Origin ALB scheme.
+    Type:           String
+    Default:        "internet-facing"
+    AllowedValues:
+      - internet-facing
+      - internal
+  ALBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: "ALB Security Group Id"
+  ALBTargetGroupHealthCheckIntervalSeconds:
+    Description:    Origin ALB Target Group Health Check Interval in Seconds.
+    Type:           String
+    Default:        "30"
+
+  ALBTargetGroupHealthCheckTimeoutSeconds:
+    Description:    Origin ALB Target Group Health Check Timeout in Seconds.
+    Type:           String
+    Default:        "5"
+
+  ALBTargetGroupHealthyThresholdCount:
+    Description:    Origin ALB Target Group Healthy Threshold Count.
+    Type:           String
+    Default:        "5"
+
+  ALBTargetGroupUnhealthyThresholdCount:
+    Description:    Origin ALB Target Group Unhealthy Threshold Count.
+    Type:           String
+    Default:        "2"
+
+  ALBAttributeIdleTimeOut:
+    Description:    Origin ALB Target Group Unhealthy Threshold Count.
+    Type:           String
+    Default:        "60"
+
+  ALBAttributeDeletionProtection:
+    Description:    Origin ALB Target Group Unhealthy Threshold Count.
+    Type:           String
+    Default:        "false"
+    AllowedValues:
+      - true
+      - false
+
+  ALBAttributeRoutingHttp2:
+    Description:    Origin ALB Target Group Unhealthy Threshold Count.
+    Type:           String
+    Default:        "true"
+    AllowedValues:
+      - true
+      - false
+
+  ALBTargetGroupAttributeDeregistration:
+    Description:    Origin ALB Target Group Deregistration Timeout.
+    Type:           String
+    Default:        "300"
+
+  HealthCheckProtocol:
+    Description:    Origin ALB Target Group Health Check Protocol.
+    Type:           String
+    Default:        "HTTP"
+    AllowedValues:
+      - HTTP
+  EnvironmentSize:
+    Type: String
+    Default: SMALL
+    AllowedValues:
+      - SMALL
+      - MEDIUM
+      - LARGE
+    Description: Select Environment Size (S,M,L)
+  VpcId:
+    Description: Enter the VpcId
+    Type: AWS::EC2::VPC::Id
+  ALBSubnetIds:
+    Description: Enter the Subnets for the ALB
+    Type: List<AWS::EC2::Subnet::Id>
+  EC2AMIId:
+    Type: String
+    Description: AMI Id for the EC2 launchconfiguration
+    Default: ami-0b2c30d69ce1bfba4
+  EC2SecurityGroup:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: "EC2 Security Group Id"
+  EC2ubnetIds:
+    Description: Enter the Subnets for the Application
+    Type: List<AWS::EC2::Subnet::Id>
+Mappings:
+  InstanceSize:
+    SMALL:
+      "EC2" : "t2.micro"
+      "DB" : "db.t2.micro"
+    MEDIUM:
+      "EC2" : "t2.small"
+      "DB" : "db.t2.small"
+    LARGE:
+      "EC2" : "t2.medium"
+      "DB" : "db.t2.medium"
+Resources:
+  LoadBalancer: # Application Load Balancer
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      SecurityGroups:
+        - !Ref ALBSecurityGroup
+      Subnets: !Ref ALBSubnetIds
+  LoadBalancerListener: # Port 80 Listener for ALB
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref LoadBalancer
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn:
+            Ref: EC2TargetGroup
+  EC2TargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      Port: 80
+      Protocol: HTTP
+      VpcId: !Ref VpcId
+  AutoScalingGroup:
+    Type: AWS::AutoScaling::AutoScalingGroup
+    Properties:
+      AvailabilityZones: !GetAZs
+      LaunchConfigurationName: !Ref LaunchConfiguration
+      MinSize: 1
+      MaxSize: 10
+      TargetGroupARNs:
+        - !Ref EC2TargetGroup
+    UpdatePolicy:
+      AutoScalingReplacingUpdate:
+        WillReplace: True
+  LaunchConfiguration:
+    Type: AWS::AutoScaling::LaunchConfiguration
+    Properties:
+      ImageId: !Ref EC2AMIId
+      InstanceType: !FindInMap [InstanceSize, !Ref EnvironmentSize, EC2]
+      KeyName: !Ref KeyName
+      UserData:
+        "Fn::Base64":
+          !Sub |
+            #!/bin/bash
+            sudo su
+            sudo yum update -y
+            sudo chown -R apache:apache /var/www
+            sudo service httpd restart
+      SecurityGroups:
+        - !Ref EC2SecurityGroup
+Outputs:
+  URL:
+    Description: The Public DNS for the Rundeck EC2 Instance
+    Value: !Sub 'http://${LoadBalancer.DNSName}/'

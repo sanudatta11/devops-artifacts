@@ -1,0 +1,146 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: RDS instance in existing VPC.
+Parameters:
+  DBEngine:
+    Description: Type of RDS Engine
+    Type: String
+    AllowedValues:
+      - aurora
+      - aurora-mysql
+      - aurora-postgresql
+      - mariadb
+      - mysql
+      - oracle-ee
+      - oracle-se2
+      - oracle-se1
+      - oracle-se
+      - postgres
+      - sqlserver-ee
+      - sqlserver-se
+      - sqlserver-ex
+      - sqlserver-web
+  DBInstanceClass:
+    Description: Type of RDS instance to launch
+    Type: String
+    Default: db.m3.large
+    AllowedValues:
+    - db.t2.small
+    - db.t2.micro
+    - db.t2.medium
+    - db.t2.large
+    - db.m3.large
+    - db.m3.xlarge
+    - db.m3.2xlarge
+    - db.r3.large
+    - db.r3.xlarge
+    - db.r3.2xlarge
+    - db.r3.4xlarge
+    - db.r3.8xlarge
+    ConstraintDescription: must be a valid RDS instance type.
+  DBStorage:
+    Description: Storage size (in GB) allocated to RDS
+    Type: Number
+    Default: '10'
+    MinValue: '5'
+  DBMasterUser:
+    Description: Username for the master DB account
+    Type: String
+  DBMasterPassword:
+    Description: Password for the master DB account
+    Type: String
+    NoEcho: 'true'
+    ConstraintDescription: must be at least 8 characters long.
+  VpcId:
+    Type: AWS::EC2::VPC::Id
+    Description: VpcId of your existing VPC
+    ConstraintDescription: must be the VPC Id of an existing VPC.
+  DBInboundPort:
+    Type: Number
+    Description : The port Number of the inbound traffic for the RDS
+  DBSubnetGroupName:
+    Type: String
+    Description: Provide a Name for DB Subnet group
+    Default: 'RDSSubnetGroup'
+  DBSubnetGroupIdList:
+    Type: List<AWS::EC2::Subnet::Id>
+    Description: The List of Subnet Group for making DB Subnet Group
+  DBFromSecurityGroupId:
+    Type: AWS::EC2::SecurityGroup::Id
+    Description: SecurityGroupId allowed to access the RDS instance
+    ConstraintDescription: Must be an existing security group in the selected VPC for Application
+  DBFromAvailabilityZone:
+    Description: Availability zone of the subnet used for your application
+    Type: AWS::EC2::AvailabilityZone::Name
+    ConstraintDescription: must be the name of a valid availability zone
+  MultiAZ:
+    Description: Multi-AZ master database
+    Type: String
+    Default: 'false'
+    AllowedValues: ['true', 'false']
+    ConstraintDescription: must be true or false.
+Resources:
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupName: RDSSubnetGroup
+      DBSubnetGroupDescription: DB Subnet Group which includes the DB Subnets Created
+      SubnetIds:
+        Ref: DBSubnetGroupIdList
+  DBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Enable DB access
+      VpcId:
+        Ref: VpcId
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort:
+          Ref: DBInboundPort
+        ToPort:
+          Ref: DBInboundPort
+        SourceSecurityGroupId:
+          Ref: DBFromSecurityGroupId
+      Tags:
+      - Key: Type
+        Value: Database
+      - Key: Name
+        Value:
+          Fn::Join:
+          - "-"
+          - - Ref: AWS::StackName
+            - RDS deployment
+  DBInstance:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      DBInstanceIdentifier:
+        Fn::Join:
+        - "-"
+        - - Ref: AWS::StackName
+          - db
+      Engine: !Ref DBEngine
+      BackupRetentionPeriod: '0'
+      MultiAZ: !Ref 'MultiAZ'
+      DBInstanceClass:
+        Ref: DBInstanceClass
+      PubliclyAccessible: 'false'
+      AvailabilityZone:
+        Ref: DBFromAvailabilityZone
+      MasterUsername:
+        Ref: DBMasterUser
+      MasterUserPassword:
+        Ref: DBMasterPassword
+      AllocatedStorage:
+        Ref: DBStorage
+      VPCSecurityGroups:
+      - Ref: DBSecurityGroup
+      DBSubnetGroupName:
+        Ref: DBSubnetGroupName
+      Tags:
+      - Key: Type
+        Value: Database
+      - Key: Name
+        Value:
+          Fn::Join:
+          - "-"
+          - - Ref: AWS::StackName
+            - db
