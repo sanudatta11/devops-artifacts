@@ -45,11 +45,17 @@ Parameters:
   DBMasterUser:
     Description: Username for the master DB account
     Type: String
+    Default: "rdsdb"
+  DBInstanceIdentifierParam:
+    Description: DB Instance Identifier
+    Type: String
+    Default: "rdsdb"
   DBMasterPassword:
     Description: Password for the master DB account
     Type: String
     NoEcho: 'true'
     ConstraintDescription: must be at least 8 characters long.
+    Default: "rdsdb123"
   VpcId:
     Type: AWS::EC2::VPC::Id
     Description: VpcId of your existing VPC
@@ -66,7 +72,7 @@ Parameters:
     Description: The List of Subnet Group for making DB Subnet Group
   DBFromSecurityGroupId:
     Type: AWS::EC2::SecurityGroup::Id
-    Description: SecurityGroupId allowed to access the RDS instance
+    Description: Application Security Group allowed to access the RDS instance
     ConstraintDescription: Must be an existing security group in the selected VPC for Application
   DBFromAvailabilityZone:
     Description: Availability zone of the subnet used for your application
@@ -112,11 +118,7 @@ Resources:
   DBInstance:
     Type: AWS::RDS::DBInstance
     Properties:
-      DBInstanceIdentifier:
-        Fn::Join:
-        - "-"
-        - - Ref: AWS::StackName
-          - db
+      DBInstanceIdentifier: !Ref DBInstanceIdentifierParam
       Engine: !Ref DBEngine
       BackupRetentionPeriod: '0'
       MultiAZ: !Ref 'MultiAZ'
@@ -144,3 +146,10 @@ Resources:
           - "-"
           - - Ref: AWS::StackName
             - db
+Outputs:
+  URL:
+    Description: The Public DNS for the DB Instance
+    Value:
+      Fn::GetAtt:
+      - DBInstance
+      - Endpoint.Address

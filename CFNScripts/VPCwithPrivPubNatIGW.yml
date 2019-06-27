@@ -600,7 +600,7 @@ Resources:
           Value: !Join
             - ''
             - - !Ref 'AWS::StackName'
-              - '-elb-to-instance'
+              - '-instance-to-rds'
   ApplicationSGIngress:
     Type: 'AWS::EC2::SecurityGroupIngress'
     DependsOn: ApplicationSG
@@ -648,78 +648,13 @@ Outputs:
   VPCCIDR:
     Description: VPC Subnet CIDR Block
     Value: !Ref VPCSubnetCidrBlock
-  VPCe:
-    Description: Created VPC Endpoint
-    Value: !Ref S3VpcEndpoint
-  PublicRouteTable:
-    Description: Public Route Table Created for VPC
-    Value: !Ref PublicRouteTable
-  PrivateRouteTable:
-    Description: Private Route Table Created for VPC
-    Value: !Ref PrivateRouteTable
-  PublicNetworkAcl:
-    Description: Public Network ACL Created for VPC
-    Value: !Ref PublicNetworkAcl
-  PrivateNetworkAcl:
-    Description: Private Netowrk ACL Created for VPC
-    Value: !Ref PrivateNetworkAcl
-  PublicSubnet1:
-    Description: Public Subnet 1 Created for VPC
-    Value: !Ref PublicSubnet1
-  PublicSubnet2:
-    Description: Public Subnet 2 Created for VPC
-    Value: !Ref PublicSubnet2
-  PublicSubnet3:
-    Description: Public Subnet 3 Created for VPC
-    Value: !Ref PublicSubnet3
-  PrivateSubnet1:
-    Description: Private Subnet 1 Created for VPC
-    Value: !Ref PrivateSubnet1
-  PrivateSubnet2:
-    Description: Private Subnet 1 Created for VPC
-    Value: !Ref PrivateSubnet2
-  PrivateSubnet3:
-    Description: Private Subnet 1 Created for VPC
-    Value: !Ref PrivateSubnet3
-  AvailabilityZone1:
-    Description: Private Subnet IDs Created for VPC
-    Value: !GetAtt
-      - PublicSubnet1
-      - AvailabilityZone
-  AvailabilityZone2:
-    Description: Private Subnet IDs Created for VPC
-    Value: !GetAtt
-      - PublicSubnet2
-      - AvailabilityZone
-  AvailabilityZone3:
-    Description: Private Subnet IDs Created for VPC
-    Value: !GetAtt
-      - PublicSubnet3
-      - AvailabilityZone
-  PublicSubnetCidr1:
-    Description: Public Subnet IDs Created for VPC
-    Value: !Ref PublicSubnetCidrBlock1
-  PublicSubnetCidr2:
-    Description: Public Subnet IDs Created for VPC
-    Value: !Ref PublicSubnetCidrBlock2
-  PublicSubnetCidr3:
-    Description: Public Subnet IDs Created for VPC
-    Value: !Ref PublicSubnetCidrBlock3
-  PrivateSubnetCidr1:
-    Description: Private Subnet IDs Created for VPC
-    Value: !Ref PrivateSubnetCidrBlock1
-  PrivateSubnetCidr2:
-    Description: Private Subnet IDs Created for VPC
-    Value: !Ref PrivateSubnetCidrBlock2
-  PrivateSubnetCidr3:
-    Description: Private Subnet IDs Created for VPC
-    Value: !Ref PrivateSubnetCidrBlock3
-  InternetGateway:
-    Description: Internet Gateway Created for VPC
-    Value: !Ref InternetGateway
-  NatEIP:
-    Description: NAT Elastic IP Address
-    Value: !Ref NatEIP
+  ApplicationSG:
+    Description: Application SG Id
+    Value: !Ref ApplicationSG
+  ALBSecurityGroup:
+    Description: ALB SG Id
+    Value: !Ref ApplicationSG
+
 Metadata:
   'AWS::CloudFormation::Interface':
     ParameterGroups:

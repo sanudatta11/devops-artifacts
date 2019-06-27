@@ -21,7 +21,7 @@ Parameters:
       - internal
   ALBSecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
-    Description: "ALB Security Group Id"
+    Description: "ALB Security Group Id from which traffic comes"
   ALBTargetGroupHealthCheckIntervalSeconds:
     Description:    Origin ALB Target Group Health Check Interval in Seconds.
     Type:           String
@@ -94,10 +94,29 @@ Parameters:
     Default: ami-0b2c30d69ce1bfba4
   EC2SecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
-    Description: "EC2 Security Group Id"
+    Description: "EC2 Security Group Id used by Application Servers"
   EC2ubnetIds:
     Description: Enter the Subnets for the Application
     Type: List<AWS::EC2::Subnet::Id>
+  RDSHostname:
+    Type: String
+    Description: RDS String for Wordpress connection
+    AllowedPattern : "rds-db.[a-zA-Z0-9]+.[a-zA-Z0-9\-]+.rds.amazonaws.com"
+  RDSDBName:
+    Type: String
+    Description: DB Name for RDS
+    AllowedPattern : ".+"
+    Default: "rdsdb"
+  RDSDBUserName:
+    Type: String
+    Description: User Name for DB
+    AllowedPattern : ".+"
+    Default: "rdsdb"
+  RDSDBPassword:
+    Type: String
+    Description: Password for DB
+    AllowedPattern : ".+"
+    Default: "rdsdb123"
 Mappings:
   InstanceSize:
     SMALL:
@@ -154,10 +173,17 @@ Resources:
         "Fn::Base64":
           !Sub |
             #!/bin/bash
-            sudo su
-            sudo yum update -y
-            sudo chown -R apache:apache /var/www
-            sudo service httpd restart
+            yum update -y
+            chown -R apache:apache /var/www
+            service httpd restart
+            cd /var/www/html
+            rm wp-config.php
+            wget https://shortto.s3.amazonaws.com/wp-config.php
+            sed -i 's/DB_HOST_INP/${RDSHostname}/g' /var/www/html/wp-config.php
+            sed -i 's/DB_NAME_INP/${RDSDBName}/g' /var/www/html/wp-config.php
+            sed -i 's/DB_USER_INP/${RDSDBUserName}/g' /var/www/html/wp-config.php
+            sed -i 's/DB_PASS_INP/${RDSDBPassword}/g' /var/www/html/wp-config.php
+            service httpd restart
       SecurityGroups:
         - !Ref EC2SecurityGroup
 Outputs:
