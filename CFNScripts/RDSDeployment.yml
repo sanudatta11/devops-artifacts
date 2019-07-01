@@ -50,6 +50,10 @@ Parameters:
     Description: DB Instance Identifier
     Type: String
     Default: "rdsdb"
+  DBName:
+    Description: DB Name
+    Type: String
+    Default: "rdsdb"
   DBMasterPassword:
     Description: Password for the master DB account
     Type: String
@@ -118,6 +122,7 @@ Resources:
   DBInstance:
     Type: AWS::RDS::DBInstance
     Properties:
+      DBName: !Ref DBName
       DBInstanceIdentifier: !Ref DBInstanceIdentifierParam
       Engine: !Ref DBEngine
       BackupRetentionPeriod: '0'
