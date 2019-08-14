@@ -1,0 +1,19 @@
+version: 0.0
+os: linux
+files:
+   - source: /app/
+     destination: /var/www/html 
+   - source: /scripts/
+     destination: /scripts/
+permissions:
+   - object: /var/www/html
+     pattern: "**"
+     owner: apache
+     group: apache
+     mode: 755
+     type:
+       - file
+hooks:
+   AfterInstall:
+    - location: /scripts/restartapache.sh
+      runas: root
