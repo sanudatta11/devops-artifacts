@@ -91,13 +91,41 @@ Parameters:
   EC2AMIId:
     Type: String
     Description: AMI Id for the EC2 launchconfiguration
-    Default: ami-0b2c30d69ce1bfba4
+    Default: ami-07d6ad6a55e9041d5
   EC2SecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
     Description: "EC2 Security Group Id used by Application Servers"
   EC2ubnetIds:
     Description: Enter the Subnets for the Application
     Type: List<AWS::EC2::Subnet::Id>
+  CloudWatchFilePath:
+    Type: String
+    Description: The Path of the String containing file log
+    Default: /var/log/httpd/access_log
+  CloudWatchLogGroup:
+    Type: String
+    Description: The Path of the Log Group for App Logs
+    Default: instance-logs
+  CloudWatchLogMetricNamespace:
+    Type: String
+    Description: Metric NameSpace for the Metric Filter
+    Default: LogMetrics
+  CloudWatchMetricName:
+    Type: String
+    Description: CloudWatch Metric Filter Name
+    Default: 5xxErrorCFNWordPress
+  CloudWatchMetricDefaultValue:
+    Type: Number
+    Description: Default Value CloudWatch Metric
+    Default: 0
+  CloudWatchFilterPattern:
+    Type: String
+    Description: CloudWatch Filter Pattern
+    Default: [ip, id, user, timestamp, request, status_code=5*, size]
+  CloudWatchMetricUpdateValue:
+    Type: String
+    Description: CloudWatch Update Value
+    Default: 1
   RDSHostname:
     Type: String
     Description: RDS String for Wordpress connection
@@ -117,6 +145,18 @@ Parameters:
     Description: Password for DB
     AllowedPattern : ".+"
     Default: "rdsdb123"
+  LogGroupNameCloudWatchInstance:
+    Type: String
+    Description: CloudWatch Alarm group for the Cloudwatch agent for Pushing logs
+    Default: instance-logs
+  5xxErrorSNSTopicName:
+    Type: String
+    Description: SNS Topic Namefor the 5xx Error
+    Default: 5xxerrorSNSTopic
+  SNSEmailAddress:
+    Type: String
+    Description: SNS Topic Email Address
+    Default: sanudatta11@gmail.com
 Mappings:
   InstanceSize:
     SMALL:
@@ -173,20 +213,67 @@ Resources:
       UserData:
         "Fn::Base64":
           !Sub |
-          #!/bin/bash
-          sudo yum update -y
-          sudo yum install -y httpd24 php70 php70-mysqlnd
-          sudo service httpd start
-          sudo chkconfig httpd on
-          cd /var/www/
-          rm -rf html
-          sudo wget http://wordpress.org/latest.tar.gz
-          sudo tar xfz latest.tar.gz
-          mv wordpress/ html/
-          sudo chown -R apache:apache /var/www
-          sudo service httpd restart
+            #!/bin/bash
+            yum update -y
+            yum install -y awslogs
+            service awslogs start
+            chkconfig awslogs on
+            chown -R apache:apache /var/www
+            service httpd restart
+            cd /var/www/html
+            rm wp-config.php
+            wget https://shortto.s3.amazonaws.com/wp-config.php
+            sed -i 's/DB_HOST_INP/${RDSHostname}/g' /var/www/html/wp-config.php
+            sed -i 's/DB_NAME_INP/${RDSDBName}/g' /var/www/html/wp-config.php
+            sed -i 's/DB_USER_INP/${RDSDBUserName}/g' /var/www/html/wp-config.php
+            sed -i 's/DB_PASS_INP/${RDSDBPassword}/g' /var/www/html/wp-config.php
+            service httpd restart
+            cd /etc/awslogs/
+            rm awslogs.conf
+            rm awscli.conf
+            wget https://shortto.s3.amazonaws.com/awslogs.conf
+            wget https://shortto.s3.amazonaws.com/awscli.conf
+            sed -i 's|FILE_PATH|'${CloudWatchFilePath}'|g' /etc/awslogs/awslogs.conf
+            sed -i 's|LOG_GROUP|'${CloudWatchLogGroup}'|g' /etc/awslogs/awslogs.conf
+            service awslogs restart
       SecurityGroups:
         - !Ref EC2SecurityGroup
+  # MetricFilter5xx:
+  #   Type: AWS::Logs::MetricFilter
+  #   Properties:
+  #     FilterPattern: !Ref CloudWatchFilterPattern
+  #     LogGroupName: !Ref CloudWatchLogGroup
+  #     MetricTransformations:
+  #       -
+  #          DefaultValue: !Ref CloudWatchMetricDefaultValue
+  #          MetricName: !Ref CloudWatchMetricName
+  #          MetricNamespace: !Ref CloudWatchLogMetricNamespace
+  #          MetricValue: !Ref CloudWatchMetricUpdateValue
+  # MetricAlarmSNSTopic:
+  #   Type: AWS::SNS::Topic
+  #   Properties:
+  #     DisplayName: !Ref 5xxErrorSNSTopicName
+  #     Subscription:
+  #       - Endpoint: !Ref SNSEmailAddress
+  #         Protocol: email
+  #     TopicName: !Ref 5xxErrorSNSTopicName
+  #
+  # MetricAlarm:
+  #   Type: AWS::CloudWatch::Alarm
+  #   Properties:
+  #     Namespace: AWS/EC2
+  #     MetricName: TotalErrorRate
+  #     Dimensions:
+  #       - Name: MetricFilter5xx
+  #         Value: !Ref MetricFilter5xx
+  #     Statistic: Maxium
+  #     Period: 60
+  #     EvaluationPeriods: 1
+  #     ComparisonOperator: GreaterThanOrEqualToThreshold
+  #     Threshold: 1
+  #     AlarmActions:
+  #       - !Ref MetricAlarmSNSTopic
+
 Outputs:
   URL:
     Description: The Public DNS for the Rundeck EC2 Instance

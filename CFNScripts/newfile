@@ -1,0 +1,25 @@
+#!/bin/bash
+yum update -y
+yum install -y awslogs
+service awslogs start
+chkconfig awslogs on
+chown -R apache:apache /var/www
+service httpd restart
+
+cd /etc/awslogs/
+rm awslogs.conf
+rm awscli.conf
+wget https://shortto.s3.amazonaws.com/awslogs.conf
+wget https://shortto.s3.amazonaws.com/awscli.conf
+sed -i 's|FILE_PATH|'/var/log/httpd/access_log'|g' /etc/awslogs/awslogs.conf
+sed -i 's|LOG_GROUP|'instance-logs'|g' /etc/awslogs/awslogs.conf
+service awslogs restart
+
+sudo yum install -y amazon-efs-utils
+sudo rm -rf /efs
+sudo mkdir /efs
+sudo mount -t efs fs-1dbfe864:/ /efs
+rm -rf /var/www/html
+sudo ln -s /efs /var/www/html -v
+sudo chown -R apache:apache /var/www/html/
+chmod 755 /var/www/html/wp-config.php

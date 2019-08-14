@@ -91,7 +91,7 @@ Parameters:
   EC2AMIId:
     Type: String
     Description: AMI Id for the EC2 launchconfiguration
-    Default: ami-0b2c30d69ce1bfba4
+    Default: ami-07d6ad6a55e9041d5
   EC2SecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
     Description: "EC2 Security Group Id used by Application Servers"
