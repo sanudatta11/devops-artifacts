@@ -11,15 +11,15 @@ if [ ! -d /downloads ]; then
 fi
 
 # download the Chef server package
-if [ ! -f /downloads/chef-server-core_12.17.33_amd64.deb ]; then
+if [ ! -f /downloads/chef-server-core_13.0.17-1_amd64.deb ]; then
   echo "Downloading the Chef server package..."
-  wget -nv -P /downloads https://packages.chef.io/files/stable/chef-server/12.17.33/ubuntu/16.04/chef-server-core_12.17.33-1_amd64.deb
+  wget -nv -P /downloads https://packages.chef.io/files/stable/chef-server/13.0.17/ubuntu/18.04/chef-server-core_13.0.17-1_amd64.deb
 fi
 
 # install Chef server
 if [ ! $(which chef-server-ctl) ]; then
   echo "Installing Chef server..."
-  dpkg -i /downloads/chef-server-core_12.17.33-1_amd64.deb
+  dpkg -i /downloads/chef-server-core_13.0.17-1_amd64.deb
   chef-server-ctl reconfigure
 
   echo "Waiting for services..."

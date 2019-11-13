@@ -1,4 +1,4 @@
-# Documentation For This Video
+# Installation of Chef Server
 
 ## Creating the Chef Server
 
@@ -35,13 +35,19 @@ The on each line indicates that the service is enabled and running. As we can se
 
 ## Creating Our User and Organization
 Before we can move on, we need to set up a user and an organization to belong to. Organizations are the umbrella that we will register nodes under and associate cookbooks with as we move forward. Let’s start by creating our user:
-
+```
 [root] $ # chef-server-ctl user-create USER_NAME FIRST_NAME LAST_NAME EMAIL 'PASSWORD' --filename FILE_NAME
+
 [root] $ chef-server-ctl user-create keith Keith Thompson keith@linuxacademy.com 'p@ssw0rd' --filename /home/user/keith.pem
+```
 This will create a username of keith and some extra metadata. An important thing to notice here is that the --filename output is an RSA key that we can use to interact with the Chef server from our workstation later on. Our next step will be creating an organization and setting ourself as the first admin user. We can do this using a similar subcommand on the chef-server-ctl utility:
 
+```
 [root] $ # chef-server-ctl org-create SHORT_ORG_NAME 'FULL_ORG_NAME' --association_user USER_NAME --filename FILE_NAME
+
 [root] $ chef-server-ctl org-create linuxacademy 'Linux Academy, Inc.' --association_user keith --filename linuxacademy-validator.pem
+```
+
 This command is very similar to our user creation command, but it is important to note that there are some validation rules for the SHORT_ORG_NAME that we need to follow:
 
 Must start with a lowercase letter or number.
@@ -49,17 +55,18 @@ Can only contain lowercase letters, digits, hyphens, and underscores.
 Must be between 1 and 255 characters long.
 The --association_user flag will take an existing user’s username and associate it with the admin security group on the Chef server. Lastly, the --filename flag stores off the organization’s validator pem. We won’t be using this file during this course.
 
-Adding chef-manage Web UI
+## Adding chef-manage Web UI
 The last thing we’re going to do with our Chef server right now is install a web UI add-on called “Chef Manage”. This add-on gives us a web-based way to see all of the Chef related information that we’ll need around our organization including node information, cookbook versions, and more. Once again, we will install this add-on using the chef-server-ctl utility:
-
+```
 [root] $ chef-server-ctl install chef-manage
+```
 Note: this installation can take quite awhile.
 
 After the installation is finished, there are still a few more steps for us to take before we can use the UI:
-
+```
 [root] $ chef-server-ctl reconfigure
-...
 [root] $ chef-manage-ctl reconfigure
+```
 To use this software, you must agree to the terms of the software license agreement.
 Press any key to continue.
 ... # License Agreement will Open
