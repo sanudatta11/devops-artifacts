@@ -383,28 +383,6 @@ Resources:
     Properties:
       SubnetId: !Ref PrivateSubnet3
       RouteTableId: !Ref PrivateRouteTable
-  S3VpcEndpoint:
-    Type: 'AWS::EC2::VPCEndpoint'
-    DependsOn:
-      - VPC
-      - PrivateRouteTable
-      - PublicRouteTable
-    Properties:
-      PolicyDocument:
-        Statement:
-          - Action: '*'
-            Effect: Allow
-            Resource: '*'
-            Principal: '*'
-      RouteTableIds:
-        - !Ref PrivateRouteTable
-        - !Ref PublicRouteTable
-      ServiceName: !Join
-        - ''
-        - - com.amazonaws.
-          - !Ref 'AWS::Region'
-          - .s3
-      VpcId: !Ref VPC
   PublicNetworkAcl:
     Type: 'AWS::EC2::NetworkAcl'
     DependsOn: VPC
